@@ -10,8 +10,7 @@ from testandoBanco import *
 from RDR import * 
 import psutil, platform
 import cpuinfo
-import pandas 
-pandas
+
 
 
 """Criando as variaveis que vamos usar para apresentar na interface gráfica"""
