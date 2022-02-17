@@ -16,11 +16,11 @@ import cpuinfo
 """Criando as variaveis que vamos usar para apresentar na interface gráfica"""
 ram = psutil.virtual_memory()
 cpu = platform.processor()
-print(cpu)
 cpuCores = str(psutil.cpu_count())
-FrequenciadoCpu = psutil.cpu_freq(percpu=True)
-
-#frequencia2 = FrequenciadoCpu.current() ta dando erro n sei o porque
+nomeProcessador = cpuinfo.get_cpu_info()['brand_raw']
+FrequenciadoCpu = cpuinfo.get_cpu_info()['hz_actual_friendly']
+arquitetura = cpuinfo.get_cpu_info()['arch']
+bits = cpuinfo.get_cpu_info()['bits']
 SISTEMA = platform.version()
 SO1 = platform.system()
 disco = psutil.disk_usage('/')
@@ -54,7 +54,7 @@ def abrir_janelacs():
     Ram2.place(x=0, y= 130, width=550, height= 30)
     cores=Label(app2,borderwidth = 3,width = 40, relief="sunken", text= "Cores do Cpu: " + str(corescpu), foreground="#00008B", background="#bcbcbc", font = "Bahnschrift")
     cores.place(x=0, y= 155, width=550, height= 30)
-    frequencia=Label(app2,borderwidth = 3,width = 40, relief="sunken", text= " Frequencia do Cpu: " + str(processador) + " MHZ", foreground="#00008B", background="#bcbcbc", font = "Bahnschrift")
+    frequencia=Label(app2,borderwidth = 3,width = 40, relief="sunken", text= " Frequencia do Cpu: " + str(processador) + " Ghz", foreground="#00008B", background="#bcbcbc", font = "Bahnschrift")
     frequencia.place(x=0, y= 180, width=550, height= 30)
     soVersao=Label(app2,borderwidth = 3,width = 40, relief="sunken", text= " Versão do SO: " + str(SOCS), foreground="#00008B", background="#bcbcbc", font = "Bahnschrift")
     soVersao.place(x=0, y= 210, width=550, height= 30)
@@ -77,7 +77,7 @@ def abrir_janelacs():
     cores.place(x=550, y= 155, width=550, height= 30)
     if(linha[5] >= linha[1]):
         cor = "#008000"
-    frequencia=Label(app2,borderwidth = 3,width = 40, relief="sunken", text= " Frequencia do Cpu: " + str(linha[5]) + " MHZ", foreground="#00008B", background=cor, font = "Bahnschrift")
+    frequencia=Label(app2,borderwidth = 3,width = 40, relief="sunken", text= " Frequencia do Cpu: " + str(linha[5]), foreground="#00008B", background=cor, font = "Bahnschrift")
     frequencia.place(x=550, y= 180, width=550, height= 30)
     if (linha[2] >= linhaCs[0]):
         cor = "#008000"
@@ -116,7 +116,7 @@ def abrir_lol():
      Ram2.place(x=0, y= 130, width=550, height= 30)
      cores=Label(app3,borderwidth = 3,width = 40, relief="sunken", text= "Cores do Cpu: " + str(coreslol), foreground="#00008B", background="#A9A9A9", font = "Bahnschrift")
      cores.place(x=0, y= 155, width=550, height= 30)
-     frequencia=Label(app3,borderwidth = 3,width = 40, relief="sunken", text= " Frequencia do Cpu: " + str(cpulol) + " MHZ", foreground="#00008B", background="#A9A9A9	", font = "Bahnschrift")
+     frequencia=Label(app3,borderwidth = 3,width = 40, relief="sunken", text= " Frequencia do Cpu: " + str(cpulol) + " Ghz", foreground="#00008B", background="#A9A9A9	", font = "Bahnschrift")
      frequencia.place(x=0, y= 180, width=550, height= 30)
      soVersao=Label(app3,borderwidth = 3,width = 40, relief="sunken", text= " Versão do SO: " + str(Solol), foreground="#00008B", background="#A9A9A9", font = "Bahnschrift")
      soVersao.place(x=0, y= 210, width=550, height= 30)
@@ -136,7 +136,7 @@ def abrir_lol():
      cores.place(x=550, y= 155, width=550, height= 30)
      if(linha[5] >= linhaLOL[2]):
          cor = "#008000"
-     frequencia=Label(app3,borderwidth = 3,width = 40, relief="sunken", text= " Frequencia do Cpu: " + str(linha[5]) + " MHZ", foreground="#00008B", background=cor, font = "Bahnschrift")
+     frequencia=Label(app3,borderwidth = 3,width = 40, relief="sunken", text= " Frequencia do Cpu: " + str(linha[5]), foreground="#00008B", background=cor, font = "Bahnschrift")
      frequencia.place(x=550, y= 180, width=550, height= 30)
      if(linha[2] >= linhaLOL[1]):
          cor = "#008000"
@@ -178,38 +178,46 @@ def abrir_rdr2():
      Cs=Label(app4,text="Requisitos Minímos RDR", foreground="#000000", background="#bcbcbc", font = "Bahnschrift")
      Cs.place(x=0, y= 100, width=550, height= 30)
 
-     Ram2=Label(app4,borderwidth = 3,width = 40, relief="sunken", text= " Memoria Ram: " + str(linhaRDR[3]) + " GB", foreground="#00008B", background="#A9A9A9", font = "Bahnschrift")
+     Ram2=Label(app4,borderwidth = 3,width = 40, relief="sunken", text= " Memória Ram: " + str(linhaRDR[4]) + " GB", foreground="#00008B", background="#A9A9A9", font = "Bahnschrift")
      Ram2.place(x=0, y= 130, width=550, height= 30)
-     cores=Label(app4,borderwidth = 3,width = 40, relief="sunken", text= "Cores do Cpu: " + str(linhaRDR[2]), foreground="#00008B", background="#A9A9A9", font = "Bahnschrift")
+     cores=Label(app4,borderwidth = 3,width = 40, relief="sunken", text= "Cores do Cpu: " + str(linhaRDR[3]), foreground="#00008B", background="#A9A9A9", font = "Bahnschrift")
      cores.place(x=0, y= 155, width=550, height= 30)
-     frequencia=Label(app4,borderwidth = 3,width = 40, relief="sunken", text= " Frequencia do Cpu: " + str(linhaRDR[1]) + " MHZ", foreground="#00008B", background="#A9A9A9	", font = "Bahnschrift")
+     frequencia=Label(app4,borderwidth = 3,width = 40, relief="sunken", text= " Frequência do Cpu: " + str(linhaRDR[2]) + " Ghz", foreground="#00008B", background="#A9A9A9	", font = "Bahnschrift")
      frequencia.place(x=0, y= 180, width=550, height= 30)
-     soVersao=Label(app4,borderwidth = 3,width = 40, relief="sunken", text= " Versão do SO: " + str(linhaRDR[0]), foreground="#00008B", background="#A9A9A9", font = "Bahnschrift")
+     soVersao=Label(app4,borderwidth = 3,width = 40, relief="sunken", text= " Versão do SO: " + str(linhaRDR[1]), foreground="#00008B", background="#A9A9A9", font = "Bahnschrift")
      soVersao.place(x=0, y= 210, width=550, height= 30)
-     espaçoEmDisco=Label(app4,borderwidth = 3,width = 40, relief="sunken", text= "Espaço em Disco: " + str(linhaRDR[4]) + " GB", foreground="#00008B", background="#A9A9A9	", font = "Bahnschrift")
+     espaçoEmDisco=Label(app4,borderwidth = 3,width = 40, relief="sunken", text= "Espaço em Disco: " + str(linhaRDR[5]) + " GB", foreground="#00008B", background="#A9A9A9	", font = "Bahnschrift")
      espaçoEmDisco.place(x=0, y= 240, width=550, height= 30)
 
      Pc=Label(app4,text="Configuração do seu Pc", foreground="#000000", background="#bcbcbc", font = "Bahnschrift")
      Pc.place(x=550, y= 100, width=550, height= 30)
      
-     if(linha[6]>= linhaRDR[3]):
+     if(linha[6]>= linhaRDR[4]):
          cor = "#008000"
+     else:
+         cor = "#8B0000"    
      Ram2=Label(app4,borderwidth = 3,width = 40, relief="sunken", text= " Memoria Ram: " + str(linha[6]) + " GB", foreground="#00008B", background="#008000", font = "Bahnschrift")
      Ram2.place(x=550, y= 130, width=550, height= 30)
-     if(linha[4] >= linhaRDR[2]):
+     if(linha[4] >= linhaRDR[3]):
          cor = "#008000"
+     else:
+         cor = "#8B0000"    
      cores=Label(app4,borderwidth = 3,width = 40, relief="sunken", text= "Cores do Cpu: " + str(linha[4]), foreground="#00008B", background=cor, font = "Bahnschrift")
      cores.place(x=550, y= 155, width=550, height= 30)
-     if(linha[5] >= linhaRDR[1]):
+     if(linha[5] >= linhaRDR[2]):
          cor = "#008000"
-     frequencia=Label(app4,borderwidth = 3,width = 40, relief="sunken", text= " Frequencia do Cpu: " + str(linha[5]) + " MHZ", foreground="#00008B", background=cor, font = "Bahnschrift")
+     
+     frequencia=Label(app4,borderwidth = 3,width = 40, relief="sunken", text= " Frequencia do Cpu: " + str(linha[5]), foreground="#00008B", background=cor, font = "Bahnschrift")
      frequencia.place(x=550, y= 180, width=550, height= 30)
-     if(linha[2] >= linhaRDR[0]):
+     if(linha[2] >= linhaRDR[1]):
          cor = "#008000"
+      
      soVersao=Label(app4,borderwidth = 3,width = 40, relief="sunken", text= " Versão do SO: " + str(linha[2]), foreground="#00008B", background=cor, font = "Bahnschrift")
      soVersao.place(x=550, y= 210, width=550, height= 30)
-     if(linha[7] >= linhaRDR[4]):
+     if(linha[7] >= linhaRDR[5]):
          cor = "#008000"
+     else:
+         cor = "#8B0000"
      espaçoEmDisco=Label(app4,borderwidth = 3,width = 40, relief="sunken", text= "Espaço em Disco: " + str(linha[7]) + " GB", foreground="#00008B", background=cor, font = "Bahnschrift")
      espaçoEmDisco.place(x=550, y= 240, width=550, height= 30)
 
@@ -248,11 +256,11 @@ labelteste.place(x=0, y= 0, width=1500, height= 99)
 
 #Mudando de cor em baixo 
 labelteste2 = Label(app,borderwidth = 3,width = 20, relief="sunken", foreground="#808080", background="#A9A9A9")
-labelteste2.place(x = 0 , y = 311, width= 1100, height=500)
+labelteste2.place(x = 0 , y = 340, width= 1100, height=500)
 
-
+#Parte branca lá em baixo nos buttons
 labelteste3 = Label(app, borderwidth=3, width= 20, relief= "sunken", background="#FFFFFF")
-labelteste3.place(x = 60, y = 380, width=1000, height= 400)
+labelteste3.place(x = 60, y = 395, width=1000, height= 270)
 
 Titulo = Label(app, text="Checando as configurações do seu computador....", foreground = "#000000", background= "#696969", font=("Trebuchet MS", 30))
 Titulo.place(x= 60, y= 30, width=1000, height= 45)
@@ -263,13 +271,13 @@ Titulo.place(x= 60, y= 30, width=1000, height= 45)
 mostrarRam=Label(text=" Sua memoria ram tem um total de: ", foreground="#000000", background="#bcbcbc", font = "Bahnschrift")
 mostrarRam.place(x=0, y= 100, width=550, height= 30)
 #mostrando a ram
-mostraRam2=Label(app,borderwidth = 3,width = 40, relief="sunken", text= "" + str(ramconvertida) + " GB", foreground="#000000", background="#FFFFFF", font = ("Comic Sans MS", 12))
+mostraRam2=Label(app,borderwidth = 3,width = 40, relief="sunken", text= "" + str(linha[6]) + " GB", foreground="#000000", background="#FFFFFF", font = ("Comic Sans MS", 12))
 mostraRam2.place(x= 550,y= 100, width=550, height= 30 )
 #Falando sobre cpu
 mostrarCpu=Label(text="Sua Cpu é: " ,foreground="#000000", background="#bcbcbc",font = "Bahnschrift")
 mostrarCpu.place(x=0, y=130, width=550, height=30)
 #Mostrando o processador
-mostrarCpu2=Label(app,borderwidth = 3,width = 40, relief="sunken", text= "" + str(cpu), foreground="#000000", background="#FFFFFF", font = ("Comic Sans MS", 12))
+mostrarCpu2=Label(app,borderwidth = 3,width = 40, relief="sunken", text= "" + nomeProcessador, foreground="#000000", background="#FFFFFF", font = ("Comic Sans MS", 12))
 mostrarCpu2.place(x= 550,y= 130, width=550, height= 30 )
 #Pegando qual sistema operacional é 
 mostrarSO=Label(text="Sistema Operacional: ",foreground="#000000", background="#bcbcbc", font = "Bahnschrift")
@@ -287,7 +295,7 @@ mostrarSO03.place(x=550, y=190, width=550, height=30)
 mostrarDisoc=Label(text="Disco rígido: " , foreground="#000000", background="#bcbcbc", font = "Bahnschrift")
 mostrarDisoc.place(x=0, y=220, width=550, height=30)
 
-mostrarDisoc=Label(app,borderwidth = 3,width = 40, relief="sunken", text="" + str(TRDISCO) + " GB", foreground="#000000", background="#FFFFFF", font = ("Comic Sans MS", 12))
+mostrarDisoc=Label(app,borderwidth = 3,width = 40, relief="sunken", text="" + str(linha[7]) + " GB", foreground="#000000", background="#FFFFFF", font = ("Comic Sans MS", 12))
 mostrarDisoc.place(x=550, y=220, width=550, height=30)
 
 mostrarCoresCpu=Label(text="Cores do Cpu: " , foreground="#000000", background="#bcbcbc", font = "Bahnschrift")
@@ -299,26 +307,32 @@ mostrarDisoc.place(x=550, y=250, width=550, height=30)
 mostrarFrequencia=Label(text="Frequência do Processador: " , foreground="#000000", background="#bcbcbc", font = "Bahnschrift")
 mostrarFrequencia.place(x=0, y=280, width=550, height=30)
 
-mostrarFrequencia2=Label(app,borderwidth = 3,width = 40, relief="sunken", text="" + str(FrequenciadoCpu) + " Cores", foreground="#000000", background="#FFFFFF", font = ("Comic Sans MS", 12))
+mostrarFrequencia2=Label(app,borderwidth = 3,width = 40, relief="sunken", text="" + str(FrequenciadoCpu), foreground="#000000", background="#FFFFFF", font = ("Comic Sans MS", 12))
 mostrarFrequencia2.place(x=550, y=280, width=550, height=30)
+
+mostrararch=Label(text="Arquitetura do Sistema: " , foreground="#000000", background="#bcbcbc", font = "Bahnschrift")
+mostrararch.place(x=0, y=310, width=550, height=30)
+
+mostrararch2=Label(app,borderwidth = 3,width = 40, relief="sunken", text="" + str(arquitetura), foreground="#000000", background="#FFFFFF", font = ("Comic Sans MS", 12))
+mostrararch2.place(x=550, y=310, width=550, height=30)
 
 
 
 
 botao = tk.Button(app, text=" Counter Strike Global Offensive", command= abrir_janelacs, background="#A9A9A9")
-botao.place(x=63, y= 383, width=200, height= 25)
+botao.place(x=63, y= 402, width=200, height= 25)
 
 botao = tk.Button(app, text="League Of Legends", command= abrir_lol, background="#A9A9A9")
-botao.place(x=275, y= 383, width=200, height= 25)
+botao.place(x=275, y= 402, width=200, height= 25)
 
 botao = tk.Button(app, text="Red Dead Redemption", command= abrir_rdr2, background="#A9A9A9")
-botao.place(x=487, y= 383, width=200, height= 25)
+botao.place(x=487, y= 402, width=200, height= 25)
 
 botaofechar = tk.Button(app, text="Fechar", command= app.destroy, foreground= "#FFFFFF",background= "#696969")
 botaofechar.place(x = 1050, y = 2, width=55)
 
 jogo = Label(app, text="Escolha o jogo a ser comparado: ",foreground="#000000", background="#A9A9A9", font=("Times New Roman", 25))
-jogo.place(x= 280, y=330, width=500, height= 45)
+jogo.place(x= 280, y=345, width=500, height= 45)
 
 
 app.mainloop()
