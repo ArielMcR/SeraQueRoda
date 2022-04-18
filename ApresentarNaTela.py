@@ -4,21 +4,22 @@ import tkinter
 import os
 import tkinter as tk
 from tkinter import font as tkfont
+from tkinter import ttk
 from csconfig import * 
 from lolconfig import * 
 from testandoBanco import *
 from RDR import * 
 import psutil, platform
 import cpuinfo
-
+import wmi as w
 
 
 """Criando as variaveis que vamos usar para apresentar na interface gráfica"""
 ram = psutil.virtual_memory()
-cpu = platform.processor()
+"""cpu = platform.processor() não iremos mais utilizar essa biblioteca""" 
 cpuCores = str(psutil.cpu_count())
 nomeProcessador = cpuinfo.get_cpu_info()['brand_raw']
-FrequenciadoCpu = cpuinfo.get_cpu_info()['hz_actual_friendly']
+Frequenciado = cpuinfo.get_cpu_info()['hz_actual_friendly']
 arquitetura = cpuinfo.get_cpu_info()['arch']
 bits = cpuinfo.get_cpu_info()['bits']
 SISTEMA = platform.version()
@@ -26,8 +27,13 @@ SO1 = platform.system()
 disco = psutil.disk_usage('/')
 TRDISCO = disco.total/(1024**3)
 ramconvertida = ram.total/(1024.0**3)
+computer = w.WMI()
+gpu_info = computer.Win32_VideoController()[0]
 
-
+""" Outra biblioteca para pegar o processador
+gpu_info = computer.Win32_VideoController()[0]
+gpu = gpu_info.Name
+"""
 
 
 """def do counter Strike"""
@@ -260,7 +266,7 @@ labelteste2.place(x = 0 , y = 340, width= 1100, height=500)
 
 #Parte branca lá em baixo nos buttons
 labelteste3 = Label(app, borderwidth=3, width= 20, relief= "sunken", background="#FFFFFF")
-labelteste3.place(x = 60, y = 395, width=1000, height= 270)
+labelteste3.place(x = 60, y = 425, width=1000, height= 250)
 
 Titulo = Label(app, text="Checando as configurações do seu computador....", foreground = "#000000", background= "#696969", font=("Trebuchet MS", 30))
 Titulo.place(x= 60, y= 30, width=1000, height= 45)
@@ -268,13 +274,13 @@ Titulo.place(x= 60, y= 30, width=1000, height= 45)
 
 
 #falando sobre a ram // parar criar borda (app,borderwidth = 3,width = 40, relief="sunken")
-mostrarRam=Label(text=" Sua memoria ram tem um total de: ", foreground="#000000", background="#bcbcbc", font = "Bahnschrift")
+mostrarRam=Label(text=" Memoria RAM: ", foreground="#000000", background="#bcbcbc", font = "Bahnschrift")
 mostrarRam.place(x=0, y= 100, width=550, height= 30)
 #mostrando a ram
 mostraRam2=Label(app,borderwidth = 3,width = 40, relief="sunken", text= "" + str(linha[6]) + " GB", foreground="#000000", background="#FFFFFF", font = ("Comic Sans MS", 12))
 mostraRam2.place(x= 550,y= 100, width=550, height= 30 )
 #Falando sobre cpu
-mostrarCpu=Label(text="Sua Cpu é: " ,foreground="#000000", background="#bcbcbc",font = "Bahnschrift")
+mostrarCpu=Label(text="Cpu" ,foreground="#000000", background="#bcbcbc",font = "Bahnschrift")
 mostrarCpu.place(x=0, y=130, width=550, height=30)
 #Mostrando o processador
 mostrarCpu2=Label(app,borderwidth = 3,width = 40, relief="sunken", text= "" + nomeProcessador, foreground="#000000", background="#FFFFFF", font = ("Comic Sans MS", 12))
@@ -307,7 +313,7 @@ mostrarDisoc.place(x=550, y=250, width=550, height=30)
 mostrarFrequencia=Label(text="Frequência do Processador: " , foreground="#000000", background="#bcbcbc", font = "Bahnschrift")
 mostrarFrequencia.place(x=0, y=280, width=550, height=30)
 
-mostrarFrequencia2=Label(app,borderwidth = 3,width = 40, relief="sunken", text="" + str(FrequenciadoCpu), foreground="#000000", background="#FFFFFF", font = ("Comic Sans MS", 12))
+mostrarFrequencia2=Label(app,borderwidth = 3,width = 40, relief="sunken", text="" + str(Frequenciado), foreground="#000000", background="#FFFFFF", font = ("Comic Sans MS", 12))
 mostrarFrequencia2.place(x=550, y=280, width=550, height=30)
 
 mostrararch=Label(text="Arquitetura do Sistema: " , foreground="#000000", background="#bcbcbc", font = "Bahnschrift")
@@ -316,23 +322,31 @@ mostrararch.place(x=0, y=310, width=550, height=30)
 mostrararch2=Label(app,borderwidth = 3,width = 40, relief="sunken", text="" + str(arquitetura), foreground="#000000", background="#FFFFFF", font = ("Comic Sans MS", 12))
 mostrararch2.place(x=550, y=310, width=550, height=30)
 
+mostrararch=Label(text="Placa de Vídeo: " , foreground="#000000", background="#bcbcbc", font = "Bahnschrift")
+mostrararch.place(x=0, y=340, width=550, height=30)
+
+mostrararch2=Label(app,borderwidth = 3,width = 40, relief="sunken", text="" + str(gpu_info.name), foreground="#000000", background="#FFFFFF", font = ("Comic Sans MS", 12))
+mostrararch2.place(x=550, y=340, width=550, height=30)
+
+
 
 
 
 botao = tk.Button(app, text=" Counter Strike Global Offensive", command= abrir_janelacs, background="#A9A9A9")
-botao.place(x=63, y= 402, width=200, height= 25)
+botao.place(x=63, y= 430, width=200, height= 25)
 
 botao = tk.Button(app, text="League Of Legends", command= abrir_lol, background="#A9A9A9")
-botao.place(x=275, y= 402, width=200, height= 25)
+botao.place(x=275, y= 430, width=200, height= 25)
 
 botao = tk.Button(app, text="Red Dead Redemption", command= abrir_rdr2, background="#A9A9A9")
-botao.place(x=487, y= 402, width=200, height= 25)
+botao.place(x=487, y= 430, width=200, height= 25)
 
 botaofechar = tk.Button(app, text="Fechar", command= app.destroy, foreground= "#FFFFFF",background= "#696969")
 botaofechar.place(x = 1050, y = 2, width=55)
 
 jogo = Label(app, text="Escolha o jogo a ser comparado: ",foreground="#000000", background="#A9A9A9", font=("Times New Roman", 25))
-jogo.place(x= 280, y=345, width=500, height= 45)
+jogo.place(x= 280, y=370, width=520, height= 35)
+
 
 
 app.mainloop()
