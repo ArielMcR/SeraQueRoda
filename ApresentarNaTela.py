@@ -1,10 +1,14 @@
 
+from cProfile import label
+from cgitb import text
 from tkinter import *
 import tkinter
 import os
 import tkinter as tk
 from tkinter import font as tkfont
 from tkinter import ttk
+"""Dando os imports das bibliotecas que vamos utilizar, assim como fazendo a orientação a objetos de outros arquivos"""
+from numpy import append
 from csconfig import * 
 from lolconfig import * 
 from testandoBanco import *
@@ -12,11 +16,19 @@ from RDR import *
 import psutil, platform
 import cpuinfo
 import wmi as w
+from distutils.log import error
+from doctest import testfile
+from os import sep
+from pyexpat import model
+import string
+import pandas as pd
+from IPython.display import display
+import cpuinfo
+
 
 
 """Criando as variaveis que vamos usar para apresentar na interface gráfica"""
 ram = psutil.virtual_memory()
-"""cpu = platform.processor() não iremos mais utilizar essa biblioteca""" 
 cpuCores = str(psutil.cpu_count())
 nomeProcessador = cpuinfo.get_cpu_info()['brand_raw']
 Frequenciado = cpuinfo.get_cpu_info()['hz_actual_friendly']
@@ -36,23 +48,38 @@ gpu = gpu_info.Name
 """
 
 
-"""def do counter Strike"""
-def abrir_janelacs():
-    """ Ta em fase de teste ainda vamos com calma"""
-    cor ="#8B0000"	
 
+
+#Criando a interface do Counter Strike Global Offensive
+def abrir_janelacs():
+    #Essa parte de alteração das cores em verde e vermelho ainda ta em teste
+    cor ="#8B0000"	
+    contaPcUser =  float(linhaben[0]) + float(linhaGPU[0]) 
+    contaPCJogo = float(linhabencs[1]) + float(linhabencs[0])
+    resultado = contaPcUser - contaPCJogo
+    #Uma outra forma de fazer as contas
+    """
+    contacpu1 = float(linhabencs[0]) - float(linhaben[0]) #(46 -76)
+    contagpu = float(linhabencs[1]) - float(linhaGPU[0]) #(4 - 4)
+    resultado = float(linhaben[0]) + float(linhaGPU[0]) #contacpu1 + contagpu#pow(contacpu1 + contagpu, 2)
+    resultado2 = float(linhabencs[1]) + float(linhabencs[0])#float(linhabencs[1]) - float(linhaben[0]) + float(linhabencs[0]) - float(linhaGPU[0])#pow(float(linhabencs[1]) + float(linhabencs[0]),2) - 5 #(46+4)
+    resultado3 = resultado + resultado
+    print(resultado)
+    print(resultado2)
+    """
+    #Criação do interface
     app2 = tk.Toplevel()
     app2.title('CS')
     app2.geometry("1100x720")
     app2.minsize(height= 720, width= 1100)
     app2.maxsize(height= 720, width= 1100)
-
+    #Personalização do Fundo a partir de Labels
     labelCs = Label(app2, borderwidth = 3,width =10, relief="sunken", foreground="#0000CD", background="#696969")
     labelCs.place(x=0, y= 0, width=1500, height= 99)
-
+    #Criação de um texto informativo a patir de Labels
     mostrarTitulo = Label(app2, text="Comparando as Configurações...",foreground="#000000", background="#696969", font=("Trebuchet MS", 30))
     mostrarTitulo.place(x= 300, y= 30, width=600, height= 45)
-
+    #Aqui a gente fez dividiu a tela em 2, uma sendo os requisitos minimos para executar o jogo
     Cs=Label(app2,text="Requisitos Minímos Cs", foreground="#000000", background="#bcbcbc", font = "Bahnschrift")
     Cs.place(x=0, y= 100, width=550, height= 30)
 
@@ -67,12 +94,12 @@ def abrir_janelacs():
     espaçoEmDisco=Label(app2,borderwidth = 3,width = 40, relief="sunken", text= "Espaço em Disco: " + str(discorigido) + " GB", foreground="#00008B", background="#bcbcbc", font = "Bahnschrift")
     espaçoEmDisco.place(x=0, y= 240, width=550, height= 30)
 
-    
+    #E aqui mostrando o pc do usuário já comparando com os requisistos minimos do jogo
     Cs=Label(app2,text="Configuração do seu Pc", foreground="#000000", background="#bcbcbc", font = "Bahnschrift")
     Cs.place(x=550, y= 100, width=550, height= 30)
 
-    if (linha[6] >= linhaCs[3]):
-      cor = "#008000"
+    if (linha[6] >= linhaCs[4]):
+     cor = "#008000"
 
     Ram2=Label(app2,borderwidth = 3,width = 40, relief="sunken", text= " Memoria Ram: " + str(linha[6]) + " GB", foreground="#00008B", background=cor, font = "Bahnschrift")
     Ram2.place(x=550, y= 130, width=550, height= 30)
@@ -81,15 +108,18 @@ def abrir_janelacs():
         cor = "#008000"
     cores=Label(app2,borderwidth = 3,width = 40, relief="sunken", text= "Cores do Cpu: " + str(linha[4]), foreground="#00008B", background=cor, font = "Bahnschrift")
     cores.place(x=550, y= 155, width=550, height= 30)
-    if(linha[5] >= linha[1]):
+    
+    if(resultado > 0):
         cor = "#008000"
-    frequencia=Label(app2,borderwidth = 3,width = 40, relief="sunken", text= " Frequencia do Cpu: " + str(linha[5]), foreground="#00008B", background=cor, font = "Bahnschrift")
+    else:
+        cor ="#8B0000"
+    frequencia=Label(app2,borderwidth = 3,width = 40, relief="sunken", text= " Cpu: " + str(linha[5]), foreground="#00008B", background=cor, font = "Bahnschrift")
     frequencia.place(x=550, y= 180, width=550, height= 30)
-    if (linha[2] >= linhaCs[0]):
-        cor = "#008000"
+    #if (linha[2]>= linhaCs[0]):
+     # cor = "#008000"
     soVersao=Label(app2,borderwidth = 3,width = 40, relief="sunken", text= " Versão do SO: " + str(linha[2]), foreground="#00008B", background=cor, font = "Bahnschrift")
     soVersao.place(x=550, y= 210, width=550, height= 30)
-    if (linha[7] >= linhaCs[4]):
+    if (linha[7] >= linhaCs[5]):
         cor = "#008000"
     espaçoEmDisco=Label(app2,borderwidth = 3,width = 40, relief="sunken", text= "Espaço em Disco: " + str(linha[7]) + " GB", foreground="#00008B", background=cor, font = "Bahnschrift")
     espaçoEmDisco.place(x=550, y= 240, width=550, height= 30)
@@ -97,12 +127,35 @@ def abrir_janelacs():
     botao2 = tk.Button(app2, text="Voltar", command= app2.destroy, foreground = "#FFFFFF", background="#696969")
     botao2.place(x = 1060, y = 2)
 
-    """ era para apresentar na tela uma imagem com as config de vídeo, mas n está aperecendo"""
+    #""" era para apresentar na tela uma imagem com as config de vídeo, mas n está aperecendo"""
+    texto = ""
+    if( resultado > 0):
+        texto = "O programa será executado com êxito" #roda > 30
+    elif(resultado <= 0 and resultado >=-300): #roda só que pode dar merda fé em Deus
+        texto = "O programa consegue ser executado, porém tudas as configurações estarão no low"
+    elif(resultado < 0 and resultado <=-300):
+        texto = "O programa não vai conseguir ser executado"    
+        
+    La = Label(app2,relief="sunken", foreground="#0000CD", background="#696969")
+    La.place(x=0, y= 270, width=1500, height= 500)
+
+    LabeDenovo2 = Label(app2, borderwidth = 2,width =10, relief="sunken", foreground="#0000CD", background="#ffffff")
+    LabeDenovo2.place(x=20, y= 300, width=1060, height= 380)
+
+    LabelTexto = Label(app2, text="Qualidade Gráfica: " + texto, background="#ffffff", font =("Times New Roman", 15))
+    LabelTexto.place(x=36, y= 305, width=1000, height= 50)
   
 
 """" Def da janela do lol"""
 def abrir_lol():
+    
+     
      cor ="#8B0000"
+     contaPcUser =  float(linhaben[0]) + float(linhaGPU[0]) 
+     contaPCJogo = float(linhaBenLol[1]) + float(linhaBenLol[0])
+     resultado = contaPcUser - contaPCJogo
+     
+    
      app3 = tk.Toplevel()
      app3.title('League of Legends')
      app3.geometry("1100x720")
@@ -132,11 +185,11 @@ def abrir_lol():
      Pc=Label(app3,text="Configuração do seu Pc", foreground="#000000", background="#bcbcbc", font = "Bahnschrift")
      Pc.place(x=550, y= 100, width=550, height= 30)
      
-     if(linha[6]>= linhaLOL[4]):
+     if(linha[6]>= linhaLOL[5]):
          cor = "#008000"
      Ram2=Label(app3,borderwidth = 3,width = 40, relief="sunken", text= " Memoria Ram: " + str(linha[6]) + " GB", foreground="#00008B", background="#008000", font = "Bahnschrift")
      Ram2.place(x=550, y= 130, width=550, height= 30)
-     if(linha[4] >= linhaLOL[3]):
+     if(resultado > 0):
          cor = "#008000"
      cores=Label(app3,borderwidth = 3,width = 40, relief="sunken", text= "Cores do Cpu: " + str(linha[4]), foreground="#00008B", background=cor, font = "Bahnschrift")
      cores.place(x=550, y= 155, width=550, height= 30)
@@ -153,15 +206,22 @@ def abrir_lol():
      espaçoEmDisco=Label(app3,borderwidth = 3,width = 40, relief="sunken", text= "Espaço em Disco: " + str(linha[7]) + " GB", foreground="#00008B", background=cor, font = "Bahnschrift")
      espaçoEmDisco.place(x=550, y= 240, width=550, height= 30)
 
-     
+     texto = ""
+     if( resultado > 0):
+        texto = "O programa será executado com êxito" #roda > 30
+     elif(resultado <= 0 and resultado >=-300): #roda só que pode dar merda fé em Deus
+        texto = "O programa consegue ser executado, porém tudas as configurações estarão no low"
+     elif(resultado < 0 and resultado <=-300):
+        texto = "Irmão não compre um computador aonde vende geladeira"    
+
      LabeDenovo = Label(app3,relief="sunken", foreground="#0000CD", background="#696969")
      LabeDenovo.place(x=0, y= 270, width=1500, height= 500)
 
      LabeDenovo2 = Label(app3, borderwidth = 2,width =10, relief="sunken", foreground="#0000CD", background="#ffffff")
      LabeDenovo2.place(x=20, y= 300, width=1060, height= 380)
 
-     LabelTexto = Label(app3, text="Qualidade Gráfica: ", background="#ffffff", font =("Times New Roman", 20))
-     LabelTexto.place(x=22, y= 305, width=230, height= 50)
+     LabelTexto = Label(app3, text="Qualidade Gráfica: " + texto, background="#ffffff", font =("Times New Roman", 15))
+     LabelTexto.place(x=36, y= 305, width=1000, height= 50)
 
      botao = tk.Button(app3, text="Voltar", command= app3.destroy, foreground = "#FFFFFF", background="#696969")
      botao.place(x = 1060, y = 2)
@@ -169,6 +229,10 @@ def abrir_lol():
 """ Criando a def do red dead redemption """
 def abrir_rdr2():
      cor ="#8B0000"
+     contaPcUser =  float(linhaben[0]) + float(linhaGPU[0]) 
+     contaPCJogo = float(linhaBenrdr[1]) + float(linhaBenrdr[0])
+     resultado = contaPcUser - contaPCJogo
+
      app4 = tk.Toplevel()
      app4.title('red dead redemption')
      app4.geometry("1100x720")
@@ -184,27 +248,27 @@ def abrir_rdr2():
      Cs=Label(app4,text="Requisitos Minímos RDR", foreground="#000000", background="#bcbcbc", font = "Bahnschrift")
      Cs.place(x=0, y= 100, width=550, height= 30)
 
-     Ram2=Label(app4,borderwidth = 3,width = 40, relief="sunken", text= " Memória Ram: " + str(linhaRDR[4]) + " GB", foreground="#00008B", background="#A9A9A9", font = "Bahnschrift")
+     Ram2=Label(app4,borderwidth = 3,width = 40, relief="sunken", text= " Memória Ram: " + str(linhaRDR[6]) + " GB", foreground="#00008B", background="#A9A9A9", font = "Bahnschrift")
      Ram2.place(x=0, y= 130, width=550, height= 30)
-     cores=Label(app4,borderwidth = 3,width = 40, relief="sunken", text= "Cores do Cpu: " + str(linhaRDR[3]), foreground="#00008B", background="#A9A9A9", font = "Bahnschrift")
+     cores=Label(app4,borderwidth = 3,width = 40, relief="sunken", text= "Cores do Cpu: " + str(linhaRDR[5]), foreground="#00008B", background="#A9A9A9", font = "Bahnschrift")
      cores.place(x=0, y= 155, width=550, height= 30)
      frequencia=Label(app4,borderwidth = 3,width = 40, relief="sunken", text= " Frequência do Cpu: " + str(linhaRDR[2]) + " Ghz", foreground="#00008B", background="#A9A9A9	", font = "Bahnschrift")
      frequencia.place(x=0, y= 180, width=550, height= 30)
      soVersao=Label(app4,borderwidth = 3,width = 40, relief="sunken", text= " Versão do SO: " + str(linhaRDR[1]), foreground="#00008B", background="#A9A9A9", font = "Bahnschrift")
      soVersao.place(x=0, y= 210, width=550, height= 30)
-     espaçoEmDisco=Label(app4,borderwidth = 3,width = 40, relief="sunken", text= "Espaço em Disco: " + str(linhaRDR[5]) + " GB", foreground="#00008B", background="#A9A9A9	", font = "Bahnschrift")
+     espaçoEmDisco=Label(app4,borderwidth = 3,width = 40, relief="sunken", text= "Espaço em Disco: " + str(linhaRDR[7]) + " GB", foreground="#00008B", background="#A9A9A9	", font = "Bahnschrift")
      espaçoEmDisco.place(x=0, y= 240, width=550, height= 30)
 
      Pc=Label(app4,text="Configuração do seu Pc", foreground="#000000", background="#bcbcbc", font = "Bahnschrift")
      Pc.place(x=550, y= 100, width=550, height= 30)
      
-     if(linha[6]>= linhaRDR[4]):
+     if(linha[6]>= linhaRDR[6]):
          cor = "#008000"
      else:
          cor = "#8B0000"    
      Ram2=Label(app4,borderwidth = 3,width = 40, relief="sunken", text= " Memoria Ram: " + str(linha[6]) + " GB", foreground="#00008B", background="#008000", font = "Bahnschrift")
      Ram2.place(x=550, y= 130, width=550, height= 30)
-     if(linha[4] >= linhaRDR[3]):
+     if(linha[4] >= linhaRDR[5]):
          cor = "#008000"
      else:
          cor = "#8B0000"    
@@ -220,7 +284,7 @@ def abrir_rdr2():
       
      soVersao=Label(app4,borderwidth = 3,width = 40, relief="sunken", text= " Versão do SO: " + str(linha[2]), foreground="#00008B", background=cor, font = "Bahnschrift")
      soVersao.place(x=550, y= 210, width=550, height= 30)
-     if(linha[7] >= linhaRDR[5]):
+     if(linha[7] >= linhaRDR[7]):
          cor = "#008000"
      else:
          cor = "#8B0000"
@@ -228,14 +292,23 @@ def abrir_rdr2():
      espaçoEmDisco.place(x=550, y= 240, width=550, height= 30)
 
      
+     texto = ""
+     if( resultado > 0):
+        texto = "O programa será executado com êxito" #roda > 30
+     elif(resultado <= 0 and resultado >=-300): #roda só que pode dar merda fé em Deus
+        texto = "O programa consegue ser executado, " + "\n" + "porém tudas as configurações estarão no low"
+     elif(resultado < 0 and resultado <=-300):
+        texto = "Irmão não compre um computador aonde vende geladeira" 
+
+
      LabeDenovo = Label(app4,relief="sunken", foreground="#0000CD", background="#696969")
      LabeDenovo.place(x=0, y= 270, width=1500, height= 500)
 
      LabeDenovo2 = Label(app4, borderwidth = 2,width =10, relief="sunken", foreground="#0000CD", background="#ffffff")
      LabeDenovo2.place(x=20, y= 300, width=1060, height= 380)
 
-     LabelTexto = Label(app4, text="Qualidade Gráfica: ", background="#ffffff", font =("Times New Roman", 20))
-     LabelTexto.place(x=22, y= 305, width=230, height= 50)
+     LabelTexto = Label(app4, text="Qualidade Gráfica: "+ texto, background="#ffffff", font =("Times New Roman", 20))
+     LabelTexto.place(x=36, y= 305, width=1050, height= 70)
 
      botao = tk.Button(app4, text="Voltar", command= app4.destroy, foreground = "#FFFFFF", background="#696969")
      botao.place(x = 1060, y = 2)
@@ -346,6 +419,7 @@ botaofechar.place(x = 1050, y = 2, width=55)
 
 jogo = Label(app, text="Escolha o jogo a ser comparado: ",foreground="#000000", background="#A9A9A9", font=("Times New Roman", 25))
 jogo.place(x= 280, y=370, width=520, height= 35)
+
 
 
 
